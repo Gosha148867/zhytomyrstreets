@@ -6,12 +6,24 @@
   <title>Вулиці Житомира</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; background: linear-gradient(135deg, #1e3a8a, #312e81); color: white; margin: 0; padding: 20px; }
-    h1 { margin: 20px 0 10px; }
-    #mode-selection { margin: 40px 0; }
+    h1 { margin: 20px 0 15px; }
+    #mode-selection { margin: 30px 0; }
+
+    .main-photo {
+      max-width: 750px;
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      margin: 25px auto;
+      display: block;
+    }
+
     button { padding: 18px 35px; font-size: 19px; margin: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
     .timer-btn { background: #f59e0b; color: black; }
     .unlimited-btn { background: #22c55e; color: black; }
-    .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; }
+    .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; margin: 10px; }
 
     input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
     #score { font-size: 28px; margin: 10px 0; }
@@ -36,7 +48,10 @@
   <h1>Назви якнайбільше вулиць Житомира</h1>
 
   <div id="mode-selection">
-    <p style="font-size: 22px; margin-bottom: 30px;">Обери режим гри:</p>
+    <!-- Одна велика фотографія -->
+    <img src="https://i.imgur.com/твоє_фото.jpg" class="main-photo" alt="Житомир">
+
+    <p style="font-size: 22px; margin: 30px 0;">Обери режим гри:</p>
     <button class="timer-btn" onclick="startGame(30)">30 хвилин</button>
     <button class="unlimited-btn" onclick="startGame(0)">Безлімітний режим</button>
   </div>
@@ -56,7 +71,7 @@
     </div>
   </div>
 
-  
+  <!-- Музика на фоні -->
   <audio id="bgMusic" loop>
     <source src="background.mp3" type="audio/mpeg">
   </audio>
