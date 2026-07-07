@@ -54,9 +54,14 @@
     </div>
   </div>
 
+  
+  <audio id="bgMusic" loop>
+    <source src="background.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
     const allStreets = [
-            "Авіаторів", "Автомобільний", "Агрономічна", "Альбрехта", "Професора Амалицького",
+      "Авіаторів", "Автомобільний", "Агрономічна", "Альбрехта", "Професора Амалицького",
       "Антона Анджейовського", "Андріївська", "Андріївський", "1 Андріївський", "Андріївський узвіз",
       "Професора Антоновича", "Артільний", "Археологічна", "Археологічний", "Професора Арциховського",
       "Аршеневських", "Багряного", "Бальзаківська", "Степана Бандери", "Баранівський",
@@ -219,6 +224,12 @@
     const tbody = document.querySelector('#street-table tbody');
     const gameDiv = document.getElementById('game');
     const timerEl = document.getElementById('timer');
+    const bgMusic = document.getElementById('bgMusic');
+
+    function playMusic() {
+      bgMusic.volume = 0.25; 
+      bgMusic.play().catch(() => {});
+    }
 
     function updateTable() {
       tbody.innerHTML = '';
@@ -278,6 +289,7 @@
 
       startTimer();
       input.addEventListener('input', checkStreet);
+      playMusic();           
     }
   </script>
 </body>
