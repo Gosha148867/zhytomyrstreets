@@ -11,6 +11,7 @@
     button { padding: 18px 35px; font-size: 19px; margin: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
     .timer-btn { background: #f59e0b; color: black; }
     .unlimited-btn { background: #22c55e; color: black; }
+    .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; }
 
     input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
     #score { font-size: 28px; margin: 10px 0; }
@@ -43,6 +44,7 @@
   <div id="game" style="display: none;">
     <div id="timer"></div>
     <p id="score">Знайдено: <strong>0</strong> / <span id="total"></span></p>
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">Музика: Увімкнено</button>
 
     <input type="text" id="input" placeholder="Введи назву вулиці..." autocomplete="off">
 
@@ -217,6 +219,7 @@
     let timeLeft = 0;
     let timerInterval;
     let isUnlimited = false;
+    let isMusicPlaying = true;
 
     const input = document.getElementById('input');
     const scoreEl = document.querySelector('#score strong');
@@ -225,9 +228,23 @@
     const gameDiv = document.getElementById('game');
     const timerEl = document.getElementById('timer');
     const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+
+    function toggleMusic() {
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        musicBtn.textContent = "Музика: Вимкнено";
+        musicBtn.style.background = "#ef4444";
+      } else {
+        bgMusic.play();
+        musicBtn.textContent = "Музика: Увімкнено";
+        musicBtn.style.background = "#8b5cf6";
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
 
     function playMusic() {
-      bgMusic.volume = 0.25; 
+      bgMusic.volume = 0.25;
       bgMusic.play().catch(() => {});
     }
 
@@ -289,7 +306,7 @@
 
       startTimer();
       input.addEventListener('input', checkStreet);
-      playMusic();           
+      playMusic();
     }
   </script>
 </body>
