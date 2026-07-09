@@ -27,7 +27,7 @@
       margin: 20px auto; 
       border-radius: 15px; 
       box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-    }
+    }	
 
     button { padding: 18px 35px; font-size: 19px; margin: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
     .timer-btn { background: #f59e0b; color: black; }
@@ -241,6 +241,7 @@
         ].sort();
 
     
+    // ====================== СИСТЕМА ДОСЯГНЕНЬ ======================
     let achievements = [];
     let unlockedAchievements = new Set();
     let currentCombo = 0;
@@ -274,42 +275,28 @@
         const popup = document.createElement('div');
         popup.style.cssText = `
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, #22c55e, #15803d);
-            color: white; padding: 20px 30px; border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 10000;
-            display: flex; align-items: center; gap: 15px; font-size: 18px;
+            background: linear-gradient(135deg, #22c55e, #15803d); color: white;
+            padding: 20px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 10000; display: flex; align-items: center; gap: 15px; font-size: 18px;
             animation: pop 0.4s ease;
         `;
         popup.innerHTML = `
             <span style="font-size: 40px;">${ach.icon}</span>
-            <div>
-                <strong>Нове досягнення!</strong><br>
-                <b>${ach.name}</b><br>
-                <small>${ach.desc}</small>
-            </div>
+            <div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>
         `;
         document.body.appendChild(popup);
-
-        setTimeout(() => {
-            popup.style.transition = 'all 0.5s';
-            popup.style.opacity = '0';
-            popup.style.transform = 'translate(-50%, -20px)';
-            setTimeout(() => popup.remove(), 500);
-        }, 4000);
+        setTimeout(() => popup.remove(), 4500);
     }
 
     function checkAchievements() {
         const count = guessed.size;
-
         achievements.forEach(ach => {
             if (unlockedAchievements.has(ach.id)) return;
-
             let unlocked = false;
 
             if (ach.type === "count" && count >= ach.target) unlocked = true;
             else if (ach.id === "speedster") {
-                const minutesPassed = (Date.now() - startTime) / 60000;
-                if (count >= 20 && minutesPassed <= 5) unlocked = true;
+                if (count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
             }
             else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
             else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
@@ -320,6 +307,31 @@
                 saveAchievements();
             }
         });
+    }
+
+    // Показати всі досягнення
+    function showAchievements() {
+        let html = '<h2>Досягнення</h2>';
+        achievements.forEach(ach => {
+            const unlocked = unlockedAchievements.has(ach.id);
+            html += `
+                <div style="margin: 12px 0; padding: 12px; background: rgba(255,255,255,0.1); border-radius: 10px; text-align: left;">
+                    <span style="font-size: 28px; filter: ${unlocked ? 'none' : 'grayscale(100%)' };">${ach.icon}</span>
+                    <strong style="margin-left: 10px;">${ach.name}</strong><br>
+                    <small>${ach.desc}</small>
+                    ${unlocked ? ' <span style="color:#22c55e;">✓ Отримане</span>' : ''}
+                </div>`;
+        });
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10001; display:flex; align-items:center; justify-content:center;`;
+        modal.innerHTML = `
+            <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:500px; max-height:90vh; overflow-y:auto;">
+                ${html}
+                <button onclick="this.closest('.modal').remove()" style="margin-top:20px; padding:12px 30px; font-size:18px;">Закрити</button>
+            </div>`;
+        modal.className = 'modal';
+        document.body.appendChild(modal);
     }
 
     
