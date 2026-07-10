@@ -338,22 +338,24 @@
 }
 
     function checkAchievements() {
-      const count = guessed.size;
-      achievements.forEach(ach => {
-        if (unlockedAchievements.has(ach.id)) return;
-        let unlocked = false;
-        if (ach.type === "count" && count >= ach.target) unlocked = true;
-        else if (ach.id === "speedster" && count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
-        else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
-        else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
-        if (unlocked) {
-          unlockedAchievements.add(ach.id);
-          showAchievementPopup(ach);
-          saveAchievements();
-        }
-      });
-    }
+  const count = guessed.size;
+  achievements.forEach(ach => {
+    if (unlockedAchievements.has(ach.id)) return;
 
+    let unlocked = false;
+
+    if (ach.type === "count" && count >= ach.target) unlocked = true;
+    else if (ach.id === "speedster" && count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
+    else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
+    else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
+
+    if (unlocked) {
+      unlockedAchievements.add(ach.id);
+      showAchievementPopup(ach);
+      saveAchievements();
+    }
+  });
+}
     // === ВИПРАВЛЕНА ФУНКЦІЯ ===
     function showAchievements() {
       const oldModal = document.getElementById('achievements-modal');
