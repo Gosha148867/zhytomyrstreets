@@ -5,23 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вулиці Житомира</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: linear-gradient(135deg, #1e3a8a, #312e81); color: white; margin: 0; padding: 20px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      background: linear-gradient(135deg, #1e3a8a, #312e81); 
+      color: white; 
+      margin: 0; 
+      padding: 20px; 
+    }
     h1 { margin: 20px 0 15px; }
     #mode-selection { margin: 30px 0; }
     .main-photo {
-      max-width: 750px; width: 100%; height: auto; object-fit: contain;
-      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
+      max-width: 750px;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      margin: 25px auto;
+      display: block;
     }
-    button { padding: 18px 35px; font-size: 19px; margin: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
+    button { 
+      padding: 18px 35px; 
+      font-size: 19px; 
+      margin: 12px; 
+      border: none; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      font-weight: bold; 
+    }
     .timer-btn { background: #f59e0b; color: black; }
     .unlimited-btn { background: #22c55e; color: black; }
     .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; margin: 10px; }
-    input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
+    .ach-btn { background: #8b5cf6; color: white; padding: 12px 20px; margin: 10px; font-size: 17px; }
+    input { 
+      padding: 16px; 
+      font-size: 22px; 
+      width: 70%; 
+      max-width: 500px; 
+      border: none; 
+      border-radius: 12px; 
+      margin: 15px 0; 
+    }
     #score { font-size: 28px; margin: 10px 0; }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
     .table-container {
-      max-width: 900px; margin: 25px auto; max-height: 500px; overflow-y: auto;
-      border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
+      max-width: 900px;
+      margin: 25px auto;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
     }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
@@ -42,6 +76,7 @@
     <div id="timer"></div>
     <p id="score">Знайдено: <strong>0</strong> / <span id="total"></span></p>
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()">Музика: Увімкнено</button>
+    <button class="ach-btn" onclick="showAchievements()">🏆 Досягнення</button>
     <input type="text" id="input" placeholder="Введи назву вулиці..." autocomplete="off">
     <div class="table-container">
       <table id="street-table">
@@ -57,7 +92,7 @@
 
   <script>
     const allStreets = [
-       "Авіаторів", "Автомобільний", "Агрономічна", "Альбрехта", "Професора Амалицького",
+      "Авіаторів", "Автомобільний", "Агрономічна", "Альбрехта", "Професора Амалицького",
       "Антона Анджейовського", "Андріївська", "Андріївський", "1 Андріївський", "Андріївський узвіз",
       "Професора Антоновича", "Артільний", "Археологічна", "Археологічний", "Професора Арциховського",
       "Аршеневських", "Багряного", "Бальзаківська", "Степана Бандери", "Баранівський",
@@ -214,6 +249,20 @@
     let currentCombo = 0;
     let mistakes = 0;
     let startTime = Date.now();
+    let guessed = new Set();
+    let timeLeft = 0;
+    let timerInterval;
+    let isUnlimited = false;
+    let isMusicPlaying = true;
+
+    const input = document.getElementById('input');
+    const scoreEl = document.querySelector('#score strong');
+    const totalEl = document.getElementById('total');
+    const tbody = document.querySelector('#street-table tbody');
+    const gameDiv = document.getElementById('game');
+    const timerEl = document.getElementById('timer');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
 
     function initAchievements() {
       achievements = [
@@ -251,9 +300,7 @@
         if (unlockedAchievements.has(ach.id)) return;
         let unlocked = false;
         if (ach.type === "count" && count >= ach.target) unlocked = true;
-        else if (ach.id === "speedster") {
-          if (count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
-        }
+        else if (ach.id === "speedster" && count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
         else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
         else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
 
@@ -269,39 +316,19 @@
       let html = '<h2 style="margin-top:0;">🏆 Досягнення</h2>';
       achievements.forEach(ach => {
         const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-            <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-            <strong style="margin-left:12px;">${ach.name}</strong><br>
-            <small>${ach.desc}</small>
-            ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓ Отримане</span>' : ''}
-          </div>`;
+        html += `<div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+          <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+          <strong style="margin-left:12px;">${ach.name}</strong><br>
+          <small>${ach.desc}</small>
+          ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓ Отримане</span>' : ''}
+        </div>`;
       });
 
       const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10001; display:flex; align-items:center; justify-content:center;';
-      modal.innerHTML = `
-        <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto;">
-          ${html}
-          <button onclick="this.closest('div[style*=\'position:fixed\']').remove()" style="margin-top:20px; padding:12px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer;">Закрити</button>
-        </div>`;
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:10001;display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;max-height:90vh;overflow-y:auto;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;font-size:18px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
       document.body.appendChild(modal);
     }
-
-    let guessed = new Set();
-    let timeLeft = 0;
-    let timerInterval;
-    let isUnlimited = false;
-    let isMusicPlaying = true;
-
-    const input = document.getElementById('input');
-    const scoreEl = document.querySelector('#score strong');
-    const totalEl = document.getElementById('total');
-    const tbody = document.querySelector('#street-table tbody');
-    const gameDiv = document.getElementById('game');
-    const timerEl = document.getElementById('timer');
-    const bgMusic = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicBtn');
 
     function toggleMusic() {
       if (isMusicPlaying) {
@@ -336,11 +363,8 @@
     function checkStreet() {
       let value = input.value.trim().toLowerCase();
       if (!value) return;
-
       value = value.replace(/вулиця|вул\.?|пров\.?|шосе|проспект|майдан|узвіз/gi, '').trim();
-
       const found = allStreets.find(street => street.toLowerCase() === value);
-
       if (found && !guessed.has(found)) {
         guessed.add(found);
         currentCombo++;
@@ -360,12 +384,10 @@
       }
       timerInterval = setInterval(() => {
         timeLeft--;
-
         const hours = Math.floor(timeLeft / 3600);
         const minutes = Math.floor((timeLeft % 3600) / 60);
         const seconds = timeLeft % 60;
         timerEl.textContent = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           alert(`Час вийшов!\nТи назвав ${guessed.size} вулиць!`);
@@ -381,7 +403,14 @@
       if (minutes === 0) isUnlimited = true;
       else timeLeft = minutes * 60;
 
-      initMap();
+      startTime = Date.now();
+      currentCombo = 0;
+      mistakes = 0;
+
+      initAchievements();
+      loadAchievements();
+      checkAchievements();
+
       startTimer();
       input.addEventListener('input', checkStreet);
       playMusic();
