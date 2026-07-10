@@ -263,18 +263,21 @@
     const musicBtn = document.getElementById('musicBtn');
 
     function initAchievements() {
-      achievements = [
-        { id: "beginner", name: "Проїздом через Житомир", desc: "Знайди 10 вулиць", icon: "🌱", target: 10, type: "count" },
-        { id: "traveler", name: "Житомирянин", desc: "Знайди 25 вулиць", icon: "🧭", target: 25, type: "count" },
-        { id: "expert", name: "Знавець Житомира", desc: "Знайди 50 вулиць", icon: "📖", target: 50, type: "count" },
-		{ id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
-        { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
-        { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" },
-        { id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
-        { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
-        { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
-      ];
-    }
+  achievements = [
+    { id: "beginner", name: "Проїздом через Житомир", desc: "Знайди 10 вулиць", icon: "🌱", target: 10, type: "count" },
+    { id: "traveler", name: "Житомирянин", desc: "Знайди 25 вулиць", icon: "🧭", target: 25, type: "count" },
+    { id: "expert", name: "Знавець Житомира", desc: "Знайди 50 вулиць", icon: "📖", target: 50, type: "count" },
+    
+    { id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
+    
+    { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
+    { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" },
+    
+    { id: "speedster", name: "Скорострел", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
+    { id: "combo_king", name: "Винстрик", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
+    { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
+  ];
+}
 
     function loadAchievements() {
       const saved = localStorage.getItem('zhytomyrAchievements');
