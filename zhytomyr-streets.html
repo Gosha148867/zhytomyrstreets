@@ -15,11 +15,6 @@
       transition: background 0.6s;
     }
     h1 { margin: 20px 0 15px; }
-    #mode-selection { margin: 30px 0; }
-    .main-photo {
-      max-width: 750px; width: 100%; height: auto; object-fit: contain;
-      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
-    }
     button {
       padding: 18px 35px;
       font-size: 19px;
@@ -35,14 +30,11 @@
       background: #8b5cf6; color: white; padding: 12px 20px; font-size: 17px; margin: 8px;
     }
     #coins { font-size: 24px; margin: 10px 0; font-weight: bold; }
-    input {
-      padding: 16px; font-size: 22px; width: 70%; max-width: 500px;
-      border: none; border-radius: 12px; margin: 15px 0;
-    }
+    input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
     .table-container {
-      max-width: 900px; margin: 25px auto; max-height: 500px;
-      overflow-y: auto; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
+      max-width: 900px; margin: 25px auto; max-height: 500px; overflow-y: auto;
+      border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
     }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
@@ -267,7 +259,6 @@
   Площа: "url('фон3.jpg')",
   Камінь: "url('фон4.jpg')"
 };
-    };
 
     function loadProgress() {
       const savedCoins = localStorage.getItem('zhytomyrCoins');
