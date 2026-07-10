@@ -12,19 +12,16 @@
       color: white; 
       margin: 0; 
       padding: 20px; 
+      min-height: 100vh;
     }
     h1 { margin: 20px 0 15px; }
+
     #mode-selection { margin: 30px 0; }
     .main-photo {
-      max-width: 750px;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-      margin: 25px auto;
-      display: block;
+      max-width: 750px; width: 100%; height: auto; object-fit: contain;
+      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
     }
+
     button { 
       padding: 18px 35px; 
       font-size: 19px; 
@@ -36,27 +33,36 @@
     }
     .timer-btn { background: #f59e0b; color: black; }
     .unlimited-btn { background: #22c55e; color: black; }
-    .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; margin: 10px; }
-    .ach-btn { background: #8b5cf6; color: white; padding: 12px 20px; margin: 10px; font-size: 17px; }
+    .music-btn, .ach-btn { 
+      background: #8b5cf6; 
+      color: white; 
+      padding: 12px 20px; 
+      font-size: 17px; 
+      margin: 8px; 
+    }
+
     input { 
       padding: 16px; 
       font-size: 22px; 
-      width: 70%; 
-      max-width: 500px; 
+      width: 90%; 
+      max-width: 600px; 
       border: none; 
       border-radius: 12px; 
       margin: 15px 0; 
     }
+
     #score { font-size: 28px; margin: 10px 0; }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
+
     .table-container {
       max-width: 900px;
       margin: 25px auto;
-      max-height: 500px;
+      max-height: 55vh;
       overflow-y: auto;
       border: 2px solid rgba(255,255,255,0.2);
       border-radius: 12px;
     }
+
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
     th { background: rgba(255,255,255,0.1); position: sticky; top: 0; }
@@ -271,8 +277,8 @@
         { id: "expert", name: "Знавець Житомира", desc: "Знайди 50 вулиць", icon: "📖", target: 50, type: "count" },
         { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
         { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" },
-        { id: "speedster", name: "Скорострел", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
-        { id: "combo_king", name: "Винстрик", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
+        { id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
+        { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
         { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
       ];
     }
@@ -312,22 +318,40 @@
       });
     }
 
+    // === ОНОВЛЕНА ФУНКЦІЯ З ВИПРАВЛЕНОЮ КНОПКОЮ ===
     function showAchievements() {
-      let html = '<h2 style="margin-top:0;">🏆 Досягнення</h2>';
+      let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
+      
       achievements.forEach(ach => {
         const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `<div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-          <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-          <strong style="margin-left:12px;">${ach.name}</strong><br>
-          <small>${ach.desc}</small>
-          ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓ Отримане</span>' : ''}
-        </div>`;
+        html += `
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+            <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+            <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
+            <small style="color:#ddd;">${ach.desc}</small>
+            ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
+          </div>`;
       });
 
       const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:10001;display:flex;align-items:center;justify-content:center;';
-      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;max-height:90vh;overflow-y:auto;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;font-size:18px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
+      modal.id = "achievements-modal";
+      modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
+
+      modal.innerHTML = `
+        <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
+          ${html}
+          <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
+            Закрити
+          </button>
+        </div>`;
+
       document.body.appendChild(modal);
+
+      // Закриття
+      document.getElementById('close-modal-btn').addEventListener('click', () => modal.remove());
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+      });
     }
 
     function toggleMusic() {
