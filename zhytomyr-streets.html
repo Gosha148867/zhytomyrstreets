@@ -319,33 +319,44 @@
     }
 
     // === ОНОВЛЕНА ФУНКЦІЯ З ВИПРАВЛЕНОЮ КНОПКОЮ ===
-    function showAchievements() {
-      let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
+ function showAchievements() {
+  let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
+  
+  achievements.forEach(ach => {
+    const isUnlocked = unlockedAchievements.has(ach.id);
+    html += `
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+        <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+        <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
+        <small style="color:#ddd;">${ach.desc}</small>
+        ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
+      </div>`;
+  });
+
+  const modal = document.createElement('div');
+  modal.id = "achievements-modal";
+  modal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.92); z-index: 10001; 
+    display: flex; align-items: center; justify-content: center;
+  `;
+
+  modal.innerHTML = `
+    <div style="background: #1e3a8a; padding: 25px; border-radius: 16px; max-width: 520px; width: 90%; max-height: 90vh; overflow-y: auto; position: relative;">
       
-      achievements.forEach(ach => {
-        const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-            <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-            <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
-            <small style="color:#ddd;">${ach.desc}</small>
-            ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
-          </div>`;
-      });
+      <span onclick="document.getElementById('achievements-modal').remove()" 
+            style="position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #ddd;">×</span>
+      
+      ${html}
+      
+      <button onclick="document.getElementById('achievements-modal').remove()" 
+              style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
+        Закрити
+      </button>
+    </div>`;
 
-      const modal = document.createElement('div');
-      modal.id = "achievements-modal";
-      modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
-
-      modal.innerHTML = `
-        <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
-          ${html}
-          <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
-            Закрити
-          </button>
-        </div>`;
-
-      document.body.appendChild(modal);
+  document.body.appendChild(modal);
+}
 
       // Закриття
       document.getElementById('close-modal-btn').addEventListener('click', () => modal.remove());
