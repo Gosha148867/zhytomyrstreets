@@ -284,13 +284,54 @@
       localStorage.setItem('zhytomyrAchievements', JSON.stringify([...unlockedAchievements]));
     }
 
-    function showAchievementPopup(ach) {
-      const popup = document.createElement('div');
-      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;animation:pop 0.4s ease;`;
-      popup.innerHTML = `<span style="font-size:40px;">${ach.icon}</span><div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>`;
-      document.body.appendChild(popup);
-      setTimeout(() => popup.remove(), 4500);
-    }
+  function showAchievementPopup(ach) {
+  const popup = document.createElement('div');
+  popup.style.cssText = `
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 18px;
+    max-width: 420px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  `;
+
+  popup.innerHTML = `
+    <span style="font-size: 42px; flex-shrink: 0;">${ach.icon}</span>
+    <div style="text-align: left;">
+      <strong style="font-size: 20px;">Нове досягнення!</strong><br>
+      <b>${ach.name}</b><br>
+      <small style="opacity: 0.9;">${ach.desc}</small>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+
+  // Анімація появи
+  setTimeout(() => {
+    popup.style.top = '20px';
+    popup.style.opacity = '1';
+  }, 10);
+
+  // Автоматичне зникнення
+  setTimeout(() => {
+    popup.style.top = '-100px';
+    popup.style.opacity = '0';
+    
+    // Видаляємо елемент після анімації
+    setTimeout(() => popup.remove(), 500);
+  }, 4500);
+}
 
     function checkAchievements() {
       const count = guessed.size;
