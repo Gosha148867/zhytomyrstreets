@@ -15,11 +15,6 @@
       transition: background 0.6s;
     }
     h1 { margin: 20px 0 15px; }
-    #mode-selection { margin: 30px 0; }
-    .main-photo {
-      max-width: 750px; width: 100%; height: auto; object-fit: contain;
-      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
-    }
     button {
       padding: 18px 35px;
       font-size: 19px;
@@ -35,14 +30,11 @@
       background: #8b5cf6; color: white; padding: 12px 20px; font-size: 17px; margin: 8px;
     }
     #coins { font-size: 24px; margin: 10px 0; font-weight: bold; }
-    input {
-      padding: 16px; font-size: 22px; width: 70%; max-width: 500px;
-      border: none; border-radius: 12px; margin: 15px 0;
-    }
+    input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
     .table-container {
-      max-width: 900px; margin: 25px auto; max-height: 500px;
-      overflow-y: auto; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
+      max-width: 900px; margin: 25px auto; max-height: 500px; overflow-y: auto;
+      border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
     }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
@@ -63,7 +55,7 @@
   <div id="game" style="display: none;">
     <div id="timer"></div>
     <p id="score">Знайдено: <strong>0</strong> / <span id="total"></span></p>
-    <p id="coins">Крошники: <strong>0</strong></p>
+    <p id="coins">Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>0</strong></p>
     
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()">Музика: Увімкнено</button>
     <button class="ach-btn" onclick="showAchievements()">🏆 Досягнення</button>
@@ -295,58 +287,84 @@
         { id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
         { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
         { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" }
+		{ id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
+        { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
+        { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
       ];
     }
 
-    function loadAchievements() {
-      const saved = localStorage.getItem('zhytomyrAchievements');
-      if (saved) unlockedAchievements = new Set(JSON.parse(saved));
-    }
-
-    function saveAchievements() {
-      localStorage.setItem('zhytomyrAchievements', JSON.stringify([...unlockedAchievements]));
-    }
-
-    function showAchievementPopup(ach) {
-      const popup = document.createElement('div');
-      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;`;
-      popup.innerHTML = `<span style="font-size:40px;">${ach.icon}</span><div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>`;
-      document.body.appendChild(popup);
-      setTimeout(() => popup.remove(), 4500);
-    }
-
-    function checkAchievements() {
-      const count = guessed.size;
-      achievements.forEach(ach => {
-        if (unlockedAchievements.has(ach.id)) return;
-        let unlocked = false;
-        if (ach.type === "count" && count >= ach.target) unlocked = true;
-        if (unlocked) {
-          unlockedAchievements.add(ach.id);
-          showAchievementPopup(ach);
-          saveAchievements();
-        }
-      });
-    }
-
-    function showAchievements() {
-      let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
-      achievements.forEach(ach => {
-        const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `<div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-          <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-          <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
-          <small style="color:#ddd;">${ach.desc}</small>
-          ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓</span>' : ''}
-        </div>`;
-      });
+    function showShop() {
       const modal = document.createElement('div');
+      modal.id = "shop-modal";
       modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
-      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
+
+      modal.innerHTML = `
+        <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
+          <h2>🛒 Магазин Крошників</h2>
+          <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
+          
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Класичний фон</strong> — 0 
+            <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Синій фон</strong> — 150 
+            <button onclick="buyBackground('blue')" style="float:right;">Купити</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Зелений фон</strong> — 200 
+            <button onclick="buyBackground('green')" style="float:right;">Купити</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Нічний фон</strong> — 250 
+            <button onclick="buyBackground('night')" style="float:right;">Купити</button>
+          </div>
+
+          <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
+        </div>`;
       document.body.appendChild(modal);
     }
 
-    function toggleMusic() {
+    function closeShop() {
+      const modal = document.getElementById('shop-modal');
+      if (modal) modal.remove();
+    }
+
+    window.buyBackground = function(bg) {
+      const prices = { blue: 150, green: 200, night: 250 };
+      if (bg === 'default') {
+        currentBackground = 'default';
+        document.body.style.background = backgrounds.default;
+      } else if (coins >= prices[bg]) {
+        coins -= prices[bg];
+        currentBackground = bg;
+        document.body.style.background = backgrounds[bg];
+        coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
+        alert("✅ Фон змінено!");
+      } else {
+        alert("Недостатньо Крошників!");
+        return;
+      }
+      saveProgress();
+    };
+
+    function startGame(minutes) {
+      document.getElementById('mode-selection').style.display = 'none';
+      gameDiv.style.display = 'block';
+      input.focus();
+      if (minutes === 0) isUnlimited = true;
+      else timeLeft = minutes * 60;
+      startTime = Date.now();
+      currentCombo = 0;
+      mistakes = 0;
+      initAchievements();
+      loadProgress();
+      startTimer();
+      input.addEventListener('input', checkStreet);
+      playMusic();
+    }
+
+      function toggleMusic() {
       if (isMusicPlaying) {
         bgMusic.pause();
         musicBtn.textContent = "Музика: Вимкнено";
@@ -412,100 +430,33 @@
       }, 1000);
     }
 
-    function startGame(minutes) {
-      document.getElementById('mode-selection').style.display = 'none';
-      gameDiv.style.display = 'block';
-      input.focus();
-      if (minutes === 0) isUnlimited = true;
-      else timeLeft = minutes * 60;
-      startTime = Date.now();
-      currentCombo = 0;
-      mistakes = 0;
-      initAchievements();
-      loadAchievements();
-      checkAchievements();
-      startTimer();
-      input.addEventListener('input', checkStreet);
-      playMusic();
+    function loadAchievements() {
+      const saved = localStorage.getItem('zhytomyrAchievements');
+      if (saved) unlockedAchievements = new Set(JSON.parse(saved));
     }
 
-    // Магазин
- // === Фони (додай свої JPG-файли) ===
-const backgrounds = {
-  default: "linear-gradient(135deg, #1e3a8a, #312e81)",
-  custom1: "url('фон1.jpg')",
-  custom2: "url('фон2.jpg')",
-  custom3: "url('фон3.jpg')",
-  custom4: "url('фон4.jpg')"
-};
+    function saveAchievements() {
+      localStorage.setItem('zhytomyrAchievements', JSON.stringify([...unlockedAchievements]));
+    }
 
-// === Магазин ===
-function showShop() {
-  const modal = document.createElement('div');
-  modal.id = "shop-modal";
-  modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
+    function showAchievementPopup(ach) {
+      const popup = document.createElement('div');
+      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;`;
+      popup.innerHTML = `<span style="font-size:40px;">${ach.icon}</span><div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>`;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 4500);
+    }
 
-  modal.innerHTML = `
-    <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:560px; width:90%;">
-      <h2>🛒 Магазин Крошників</h2>
-      <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Класичний фон</strong> — 0 Крошників
-        <button onclick="buyBackground('default')" style="float:right; padding:8px 16px;">Застосувати</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 1</strong> — 180 Крошників
-        <button onclick="buyBackground('custom1')" style="float:right; padding:8px 16px;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 2</strong> — 200 Крошників
-        <button onclick="buyBackground('custom2')" style="float:right; padding:8px 16px;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 3</strong> — 220 Крошників
-        <button onclick="buyBackground('custom3')" style="float:right; padding:8px 16px;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 4</strong> — 250 Крошників
-        <button onclick="buyBackground('custom4')" style="float:right; padding:8px 16px;">Купити</button>
-      </div>
-
-      <button onclick="closeShop()" style="margin-top:20px; padding:14px 40px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">Закрити</button>
-    </div>`;
-
-  document.body.appendChild(modal);
-}
-
-function closeShop() {
-  const modal = document.getElementById('shop-modal');
-  if (modal) modal.remove();
-}
-
-window.buyBackground = function(bg) {
-  const prices = { custom1: 180, custom2: 200, custom3: 220, custom4: 250 };
-
-  if (bg === 'default') {
-    currentBackground = 'default';
-    document.body.style.background = backgrounds.default;
-  } else if (coins >= prices[bg]) {
-    coins -= prices[bg];
-    currentBackground = bg;
-    document.body.style.background = backgrounds[bg];
-    document.getElementById('coins').innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
-    alert("✅ Фон успішно змінено!");
-  } else {
-    alert("Недостатньо Крошників!");
-    return;
-  }
-  saveProgress();
-};
-
-    loadProgress(); // завантаження при старті
-  </script>
-</body>
-</html>
+    function checkAchievements() {
+      const count = guessed.size;
+      achievements.forEach(ach => {
+        if (unlockedAchievements.has(ach.id)) return;
+        let unlocked = false;
+        if (ach.type === "count" && count >= ach.target) unlocked = true;
+        if (unlocked) {
+          unlockedAchievements.add(ach.id);
+          showAchievementPopup(ach);
+          saveAchievements();
+        }
+      });
+    }
