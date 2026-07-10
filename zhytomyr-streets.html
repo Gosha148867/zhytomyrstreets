@@ -261,10 +261,13 @@
     const musicBtn = document.getElementById('musicBtn');
 
     const backgrounds = {
-      default: "linear-gradient(135deg, #1e3a8a, #312e81)",
-      blue: "linear-gradient(135deg, #1e40af, #312e81)",
-      green: "linear-gradient(135deg, #166534, #14532d)",
-      night: "linear-gradient(135deg, #1f2937, #111827)"
+      const backgrounds = {
+  default: "linear-gradient(135deg, #1e3a8a, #312e81)",
+  Політех: "url('фон1.jpg')",
+  АТБ: "url('фон2.jpg')",
+  Площа: "url('фон3.jpg')",
+  Замкова_Гора: "url('фон4.jpg')"
+};
     };
 
     function loadProgress() {
@@ -432,37 +435,45 @@
       playMusic();
     }
 
-    function showShop() {
-      const modal = document.createElement('div');
-      modal.id = "shop-modal";
-      modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
+   function showShop() {
+  const modal = document.createElement('div');
+  modal.id = "shop-modal";
+  modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
 
-      modal.innerHTML = `
-        <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
-          <h2>🛒 Магазин Крошників</h2>
-          <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
-          
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Класичний фон</strong> — 0 
-            <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
-          </div>
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Синій фон</strong> — 150 
-            <button onclick="buyBackground('blue')" style="float:right;">Купити</button>
-          </div>
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Зелений фон</strong> — 200 
-            <button onclick="buyBackground('green')" style="float:right;">Купити</button>
-          </div>
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Нічний фон</strong> — 250 
-            <button onclick="buyBackground('night')" style="float:right;">Купити</button>
-          </div>
+  modal.innerHTML = `
+    <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
+      <h2>🛒 Магазин Крошників</h2>
+      <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
+      
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+        <strong>Класичний фон</strong> — 0 
+        <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
+      </div>
+      
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+        <strong>Фон 1</strong> — 180 
+        <button onclick="buyBackground('custom1')" style="float:right;">Купити</button>
+      </div>
+      
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+        <strong>Фон 2</strong> — 200 
+        <button onclick="buyBackground('custom2')" style="float:right;">Купити</button>
+      </div>
+      
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+        <strong>Фон 3</strong> — 220 
+        <button onclick="buyBackground('custom3')" style="float:right;">Купити</button>
+      </div>
+      
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+        <strong>Фон 4</strong> — 250 
+        <button onclick="buyBackground('custom4')" style="float:right;">Купити</button>
+      </div>
 
-          <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
-        </div>`;
-      document.body.appendChild(modal);
-    }
+      <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
+    </div>`;
+  document.body.appendChild(modal);
+}
 
     function closeShop() {
       const modal = document.getElementById('shop-modal');
