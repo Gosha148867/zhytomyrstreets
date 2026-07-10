@@ -12,18 +12,13 @@
       color: white;
       margin: 0;
       padding: 20px;
+      transition: background 0.6s;
     }
     h1 { margin: 20px 0 15px; }
     #mode-selection { margin: 30px 0; }
     .main-photo {
-      max-width: 750px;
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-      margin: 25px auto;
-      display: block;
+      max-width: 750px; width: 100%; height: auto; object-fit: contain;
+      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
     }
     button {
       padding: 18px 35px;
@@ -36,26 +31,18 @@
     }
     .timer-btn { background: #f59e0b; color: black; }
     .unlimited-btn { background: #22c55e; color: black; }
-    .music-btn { background: #8b5cf6; color: white; padding: 10px 20px; font-size: 16px; margin: 10px; }
-    .ach-btn { background: #8b5cf6; color: white; padding: 12px 20px; margin: 10px; font-size: 17px; }
-    input {
-      padding: 16px;
-      font-size: 22px;
-      width: 70%;
-      max-width: 500px;
-      border: none;
-      border-radius: 12px;
-      margin: 15px 0;
+    .music-btn, .ach-btn, .shop-btn {
+      background: #8b5cf6; color: white; padding: 12px 20px; font-size: 17px; margin: 8px;
     }
-    #score { font-size: 28px; margin: 10px 0; }
+    #coins { font-size: 24px; margin: 10px 0; font-weight: bold; }
+    input {
+      padding: 16px; font-size: 22px; width: 70%; max-width: 500px;
+      border: none; border-radius: 12px; margin: 15px 0;
+    }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
     .table-container {
-      max-width: 900px;
-      margin: 25px auto;
-      max-height: 500px;
-      overflow-y: auto;
-      border: 2px solid rgba(255,255,255,0.2);
-      border-radius: 12px;
+      max-width: 900px; margin: 25px auto; max-height: 500px;
+      overflow-y: auto; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
     }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
@@ -65,18 +52,25 @@
 </head>
 <body>
   <h1>Назви якнайбільше вулиць Житомира</h1>
+  
   <div id="mode-selection">
     <img src="photo1.jpg" class="main-photo" alt="Житомир">
     <p style="font-size: 22px; margin: 30px 0;">Обери режим гри:</p>
     <button class="timer-btn" onclick="startGame(30)">30 хвилин</button>
     <button class="unlimited-btn" onclick="startGame(0)">Безлімітний режим</button>
   </div>
+
   <div id="game" style="display: none;">
     <div id="timer"></div>
     <p id="score">Знайдено: <strong>0</strong> / <span id="total"></span></p>
+    <p id="coins">Крошники: <strong>0</strong></p>
+    
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()">Музика: Увімкнено</button>
     <button class="ach-btn" onclick="showAchievements()">🏆 Досягнення</button>
+    <button class="shop-btn" onclick="showShop()">🛒 Магазин</button>
+
     <input type="text" id="input" placeholder="Введи назву вулиці..." autocomplete="off">
+    
     <div class="table-container">
       <table id="street-table">
         <thead><tr><th>Вулиця</th></tr></thead>
@@ -84,6 +78,7 @@
       </table>
     </div>
   </div>
+
   <audio id="bgMusic" loop>
     <source src="background.mp3" type="audio/mpeg">
   </audio>
@@ -242,6 +237,8 @@
       "Яроцького", "Ясеневий", "Ясний"
     ].sort();
 
+    let coins = 0;
+    let currentBackground = "default";
     let achievements = [];
     let unlockedAchievements = new Set();
     let currentCombo = 0;
@@ -256,30 +253,55 @@
     const input = document.getElementById('input');
     const scoreEl = document.querySelector('#score strong');
     const totalEl = document.getElementById('total');
+    const coinsEl = document.querySelector('#coins strong');
     const tbody = document.querySelector('#street-table tbody');
     const gameDiv = document.getElementById('game');
     const timerEl = document.getElementById('timer');
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
-    function initAchievements() {
-  achievements = [
-    { id: "beginner", name: "Проїздом через Житомир", desc: "Знайди 10 вулиць", icon: "🌱", target: 10, type: "count" },
-    { id: "traveler", name: "Житомирянин", desc: "Знайди 25 вулиць", icon: "🧭", target: 25, type: "count" },
-    { id: "expert", name: "Знавець Житомира", desc: "Знайди 50 вулиць", icon: "📖", target: 50, type: "count" },
-    
-    { id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
-    
-    { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
-    { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" },
-    
-    { id: "speedster", name: "Скорострел", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
-    { id: "combo_king", name: "Винстрик", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
-    { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
-  ];
-}
+    const backgrounds = {
+      default: "linear-gradient(135deg, #1e3a8a, #312e81)",
+      blue: "linear-gradient(135deg, #1e40af, #312e81)",
+      green: "linear-gradient(135deg, #166534, #14532d)",
+      night: "linear-gradient(135deg, #1f2937, #111827)"
+    };
 
-    function loadAchievements() {
+    function loadProgress() {
+      const savedCoins = localStorage.getItem('zhytomyrCoins');
+      const savedBg = localStorage.getItem('zhytomyrBackground');
+      if (savedCoins) coins = parseInt(savedCoins);
+      if (savedBg && backgrounds[savedBg]) currentBackground = savedBg;
+      coinsEl.textContent = coins;
+      document.body.style.background = backgrounds[currentBackground];
+    }
+
+    function saveProgress() {
+      localStorage.setItem('zhytomyrCoins', coins);
+      localStorage.setItem('zhytomyrBackground', currentBackground);
+    }
+
+    function addCoins(amount) {
+      coins += amount;
+      coinsEl.textContent = coins;
+      saveProgress();
+    }
+
+    function initAchievements() {
+      achievements = [
+        { id: "beginner", name: "Проїздом через Житомир", desc: "Знайди 10 вулиць", icon: "🌱", target: 10, type: "count" },
+        { id: "traveler", name: "Житомирянин", desc: "Знайди 25 вулиць", icon: "🧭", target: 25, type: "count" },
+        { id: "expert", name: "Знавець Житомира", desc: "Знайди 50 вулиць", icon: "📖", target: 50, type: "count" },
+        { id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
+        { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
+        { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" }
+		{ id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
+        { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
+        { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
+      ];
+    }
+
+	   function loadAchievements() {
       const saved = localStorage.getItem('zhytomyrAchievements');
       if (saved) unlockedAchievements = new Set(JSON.parse(saved));
     }
@@ -288,124 +310,66 @@
       localStorage.setItem('zhytomyrAchievements', JSON.stringify([...unlockedAchievements]));
     }
 
-  function showAchievementPopup(ach) {
-  const popup = document.createElement('div');
-  popup.style.cssText = `
-    position: fixed;
-    top: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #22c55e, #15803d);
-    color: white;
-    padding: 20px 30px;
-    border-radius: 16px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 18px;
-    max-width: 420px;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  `;
-
-  popup.innerHTML = `
-    <span style="font-size: 42px; flex-shrink: 0;">${ach.icon}</span>
-    <div style="text-align: left;">
-      <strong style="font-size: 20px;">Нове досягнення!</strong><br>
-      <b>${ach.name}</b><br>
-      <small style="opacity: 0.9;">${ach.desc}</small>
-    </div>
-  `;
-
-  document.body.appendChild(popup);
-
-  // Анімація появи
-  setTimeout(() => {
-    popup.style.top = '20px';
-    popup.style.opacity = '1';
-  }, 10);
-
-  // Автоматичне зникнення
-  setTimeout(() => {
-    popup.style.top = '-100px';
-    popup.style.opacity = '0';
-    
-    // Видаляємо елемент після анімації
-    setTimeout(() => popup.remove(), 500);
-  }, 4500);
-}
+    function showAchievementPopup(ach) {
+      const popup = document.createElement('div');
+      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;animation:pop 0.4s ease;`;
+      popup.innerHTML = `<span style="font-size:40px;">${ach.icon}</span><div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>`;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 4500);
+    }
 
     function checkAchievements() {
-  const count = guessed.size;
-  achievements.forEach(ach => {
-    if (unlockedAchievements.has(ach.id)) return;
-
-    let unlocked = false;
-
-    if (ach.type === "count" && count >= ach.target) unlocked = true;
-    else if (ach.id === "speedster" && count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
-    else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
-    else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
-
-    if (unlocked) {
-      unlockedAchievements.add(ach.id);
-      showAchievementPopup(ach);
-      saveAchievements();
-    }
-  });
-}
-    // === ВИПРАВЛЕНА ФУНКЦІЯ ===
-    function showAchievements() {
-      const oldModal = document.getElementById('achievements-modal');
-      if (oldModal) oldModal.remove();
-
-      let html = '<h2 style="margin-top:0; color:white; text-align:center;">🏆 Досягнення</h2>';
-      
+      const count = guessed.size;
       achievements.forEach(ach => {
-        const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `
-          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-            <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-            <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
-            <small style="color:#ddd;">${ach.desc}</small>
-            ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
-          </div>`;
-      });
+        if (unlockedAchievements.has(ach.id)) return;
+        let unlocked = false;
+        if (ach.type === "count" && count >= ach.target) unlocked = true;
+        else if (ach.id === "speedster") {
+          if (count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
+        }
+        else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
+        else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
 
-      const modal = document.createElement('div');
-      modal.id = "achievements-modal";
-      modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
-
-      modal.innerHTML = `
-        <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
-          ${html}
-          <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
-            Закрити
-          </button>
-        </div>`;
-
-      document.body.appendChild(modal);
-
-      // Надійне закриття
-      const closeBtn = document.getElementById('close-modal-btn');
-      const closeModal = () => modal.remove();
-
-      closeBtn.addEventListener('click', closeModal);
-      
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-      });
-
-      // Закриття по Esc
-      document.addEventListener('keydown', function handler(e) {
-        if (e.key === "Escape") {
-          closeModal();
-          document.removeEventListener('keydown', handler);
+        if (unlocked) {
+          unlockedAchievements.add(ach.id);
+          showAchievementPopup(ach);
+          saveAchievements();
         }
       });
     }
+
+    function showAchievements() {
+      // (твоя попередня функція)
+      let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
+      achievements.forEach(ach => {
+        const isUnlocked = unlockedAchievements.has(ach.id);
+        html += `<div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+          <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+          <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
+          <small style="color:#ddd;">${ach.desc}</small>
+          ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓</span>' : ''}
+        </div>`;
+      });
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:10001;display:flex;align-items:center;justify-content:center;';
+      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
+      document.body.appendChild(modal);
+    }
+
+	let guessed = new Set();
+    let timeLeft = 0;
+    let timerInterval;
+    let isUnlimited = false;
+    let isMusicPlaying = true;
+
+    const input = document.getElementById('input');
+    const scoreEl = document.querySelector('#score strong');
+    const totalEl = document.getElementById('total');
+    const tbody = document.querySelector('#street-table tbody');
+    const gameDiv = document.getElementById('game');
+    const timerEl = document.getElementById('timer');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
 
     function toggleMusic() {
       if (isMusicPlaying) {
@@ -445,6 +409,7 @@
       if (found && !guessed.has(found)) {
         guessed.add(found);
         currentCombo++;
+        addCoins(10); // +10 Крошників
         updateTable();
         checkAchievements();
         input.value = '';
@@ -482,12 +447,58 @@
       currentCombo = 0;
       mistakes = 0;
       initAchievements();
-      loadAchievements();
-      checkAchievements();
+      loadProgress();
       startTimer();
       input.addEventListener('input', checkStreet);
       playMusic();
     }
+
+    // Магазин
+    function showShop() {
+      let html = `<h2>🛒 Магазин Крошників</h2><p>У тебе: <strong>${coins} Крошників</strong></p>`;
+      html += `
+        <div style="margin:15px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+          <strong>Класичний фон</strong> — 0 
+          <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
+        </div>
+        <div style="margin:15px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+          <strong>Синій фон</strong> — 150 
+          <button onclick="buyBackground('blue')" style="float:right;">Купити</button>
+        </div>
+        <div style="margin:15px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+          <strong>Зелений фон</strong> — 200 
+          <button onclick="buyBackground('green')" style="float:right;">Купити</button>
+        </div>
+        <div style="margin:15px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+          <strong>Нічний фон</strong> — 250 
+          <button onclick="buyBackground('night')" style="float:right;">Купити</button>
+        </div>`;
+
+      const modal = document.createElement('div');
+      modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
+      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">${html}<br><button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="padding:12px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
+      document.body.appendChild(modal);
+    }
+
+    window.buyBackground = function(bg) {
+      const prices = { blue: 150, green: 200, night: 250 };
+      if (bg === 'default') {
+        currentBackground = 'default';
+        document.body.style.background = backgrounds.default;
+      } else if (coins >= prices[bg]) {
+        coins -= prices[bg];
+        currentBackground = bg;
+        document.body.style.background = backgrounds[bg];
+        coinsEl.textContent = coins;
+        alert("✅ Фон змінено!");
+      } else {
+        alert("Недостатньо Крошників!");
+        return;
+      }
+      saveProgress();
+    };
+
+    loadProgress(); // завантаження при старті
   </script>
 </body>
 </html>
