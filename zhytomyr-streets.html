@@ -295,13 +295,10 @@
         { id: "sixseven", name: "Сікс Севен", desc: "Знайди 67 вулиць", icon: "🔥", target: 67, type: "count" },
         { id: "master", name: "Водій 44", desc: "Знайди 100 вулиць", icon: "🏆", target: 100, type: "count" },
         { id: "legend", name: "Мер Житомира", desc: "Знайди ВСІ вулиці", icon: "👑", target: allStreets.length, type: "count" }
-		{ id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
-        { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
-        { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" }
       ];
     }
 
-	   function loadAchievements() {
+    function loadAchievements() {
       const saved = localStorage.getItem('zhytomyrAchievements');
       if (saved) unlockedAchievements = new Set(JSON.parse(saved));
     }
@@ -312,7 +309,7 @@
 
     function showAchievementPopup(ach) {
       const popup = document.createElement('div');
-      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;animation:pop 0.4s ease;`;
+      popup.style.cssText = `position:fixed;top:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:white;padding:20px 30px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.4);z-index:10000;display:flex;align-items:center;gap:15px;font-size:18px;`;
       popup.innerHTML = `<span style="font-size:40px;">${ach.icon}</span><div><strong>Нове досягнення!</strong><br><b>${ach.name}</b><br><small>${ach.desc}</small></div>`;
       document.body.appendChild(popup);
       setTimeout(() => popup.remove(), 4500);
@@ -324,12 +321,6 @@
         if (unlockedAchievements.has(ach.id)) return;
         let unlocked = false;
         if (ach.type === "count" && count >= ach.target) unlocked = true;
-        else if (ach.id === "speedster") {
-          if (count >= 20 && (Date.now() - startTime)/60000 <= 5) unlocked = true;
-        }
-        else if (ach.id === "combo_king" && currentCombo >= 10) unlocked = true;
-        else if (ach.id === "perfect" && count >= 50 && mistakes === 0) unlocked = true;
-
         if (unlocked) {
           unlockedAchievements.add(ach.id);
           showAchievementPopup(ach);
@@ -339,7 +330,6 @@
     }
 
     function showAchievements() {
-      // (твоя попередня функція)
       let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
       achievements.forEach(ach => {
         const isUnlocked = unlockedAchievements.has(ach.id);
@@ -351,25 +341,10 @@
         </div>`;
       });
       const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:10001;display:flex;align-items:center;justify-content:center;';
+      modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
       modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
       document.body.appendChild(modal);
     }
-
-	let guessed = new Set();
-    let timeLeft = 0;
-    let timerInterval;
-    let isUnlimited = false;
-    let isMusicPlaying = true;
-
-    const input = document.getElementById('input');
-    const scoreEl = document.querySelector('#score strong');
-    const totalEl = document.getElementById('total');
-    const tbody = document.querySelector('#street-table tbody');
-    const gameDiv = document.getElementById('game');
-    const timerEl = document.getElementById('timer');
-    const bgMusic = document.getElementById('bgMusic');
-    const musicBtn = document.getElementById('musicBtn');
 
     function toggleMusic() {
       if (isMusicPlaying) {
@@ -409,7 +384,7 @@
       if (found && !guessed.has(found)) {
         guessed.add(found);
         currentCombo++;
-        addCoins(10); // +10 Крошників
+        addCoins(10);
         updateTable();
         checkAchievements();
         input.value = '';
@@ -447,7 +422,8 @@
       currentCombo = 0;
       mistakes = 0;
       initAchievements();
-      loadProgress();
+      loadAchievements();
+      checkAchievements();
       startTimer();
       input.addEventListener('input', checkStreet);
       playMusic();
@@ -490,7 +466,7 @@
         currentBackground = bg;
         document.body.style.background = backgrounds[bg];
         coinsEl.textContent = coins;
-        alert("✅ Фон змінено!");
+        alert("✅ Фон успішно змінено!");
       } else {
         alert("Недостатньо Крошників!");
         return;
