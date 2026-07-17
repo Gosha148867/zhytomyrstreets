@@ -496,12 +496,12 @@
       if (modal) modal.remove();
     }
 
-  window.buyBackground = function(bg) {
+ window.buyBackground = function(bg) {
   const prices = {
-    Політех: 180,
-    АТБ: 200,
-    Площа: 220,
-    Камінь: 250
+    фон1: 180,
+    фон2: 200,
+    фон3: 220,
+    фон4: 250
   };
 
   const price = prices[bg];
@@ -509,12 +509,10 @@
   if (bg === 'default') {
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
-    alert("✅ Класичний фон застосовано!");
   } else if (price !== undefined && coins >= price) {
-  coins -= price;
-  currentBackground = bg;
-  
-  document.body.style.background = backgrounds[bg];
+    coins -= price;
+    currentBackground = bg;
+    document.body.style.background = backgrounds[bg];
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
@@ -523,7 +521,7 @@
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
     alert("✅ Фон успішно змінено!");
   } else {
-    alert("Недостатньо Крошників!");
+    alert("Недостатньо Крошників! Потрібно: " + (price || "невідомо"));
   }
   saveProgress();
 };
