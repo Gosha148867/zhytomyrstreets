@@ -5,21 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вулиці Житомира</title>
   <style>
-  body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: linear-gradient(135deg, #1e3a8a, #312e81);
-  color: white;
-  margin: 0;
-  padding: 20px;
-  transition: background 0.6s;
-
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed;
-  min-height: 100vh;
-}
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #1e3a8a, #312e81);
+      color: white;
+      margin: 0;
+      padding: 20px;
+      transition: background 0.6s;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
     h1 { margin: 20px 0 15px; }
     button {
       padding: 18px 35px;
@@ -233,7 +232,7 @@
       "Шкільний", "Шлях до греблі", "Шляхетна", "Шодуарівський", "Шолом-Алейхема",
       "Шосейний", "Шпаковська", "Шумський", "Яблунева", "Якубця", "Ялинкова",
       "Яроцького", "Ясеневий", "Ясний"
-    ].sort();
+   ].sort();
 
     let coins = 0;
     let currentBackground = "default";
@@ -258,14 +257,14 @@
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
- const backgrounds = {
-  default: "linear-gradient(135deg, #1e3a8a, #312e81)",
-  Політех: "url('фон1.jpg')",
-  АТБ: "url('фон2.jpg')",
-  Площа: "url('фон3.jpg')",
-  Камінь: "url('фон4.jpg')"
-};
-    function loadProgress() {
+    const backgrounds = {
+      default: "linear-gradient(135deg, #1e3a8a, #312e81)",
+      Політех: "url('фон1.jpg')",
+      АТБ: "url('фон2.jpg')",
+      Площа: "url('фон3.jpg')",
+      Камінь: "url('фон4.jpg')"
+    };
+   function loadProgress() {
       const savedCoins = localStorage.getItem('zhytomyrCoins');
       const savedBg = localStorage.getItem('zhytomyrBackground');
       if (savedCoins) coins = parseInt(savedCoins);
@@ -451,90 +450,76 @@
       playMusic();
     }
 
-  function showShop() {
-  const modal = document.createElement('div');
-  modal.id = "shop-modal";
-  modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
+function showShop() {
+      const modal = document.createElement('div');
+      modal.id = "shop-modal";
+      modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
 
-  modal.innerHTML = `
-    <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
-      <h2>🛒 Магазин Крошників</h2>
-      <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Класичний фон</strong> — 0 
-        <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Політех</strong> — 180 
-        <button onclick="buyBackground('Політех')" style="float:right;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>АТБ</strong> — 200 
-        <button onclick="buyBackground('АТБ')" style="float:right;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Площа</strong> — 220 
-        <button onclick="buyBackground('Площа')" style="float:right;">Купити</button>
-      </div>
-      
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Камінь</strong> — 250 
-        <button onclick="buyBackground('Камінь')" style="float:right;">Купити</button>
-      </div>
+      modal.innerHTML = `
+        <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
+          <h2>🛒 Магазин Крошників</h2>
+          <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
+          
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Класичний фон</strong> — 0 
+            <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Політех</strong> — 180 
+            <button onclick="buyBackground('Політех')" style="float:right;">Купити</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>АТБ</strong> — 200 
+            <button onclick="buyBackground('АТБ')" style="float:right;">Купити</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Площа</strong> — 220 
+            <button onclick="buyBackground('Площа')" style="float:right;">Купити</button>
+          </div>
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
+            <strong>Камінь</strong> — 250 
+            <button onclick="buyBackground('Камінь')" style="float:right;">Купити</button>
+          </div>
 
-      <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
-    </div>`;
-  document.body.appendChild(modal);
-}
+          <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
+        </div>`;
+      document.body.appendChild(modal);
+    }
 
     function closeShop() {
       const modal = document.getElementById('shop-modal');
       if (modal) modal.remove();
     }
 
-const backgrounds = {
-  default: "linear-gradient(135deg, #1e3a8a, #312e81)",
-  Політех: "url('фон1.jpg')",
-  АТБ: "url('фон2.jpg')",
-  Площа: "url('фон3.jpg')",
-  Камінь: "url('фон4.jpg')"
-};
+    window.buyBackground = function(bg) {
+      const prices = {
+        Політех: 180,
+        АТБ: 200,
+        Площа: 220,
+        Камінь: 250
+      };
 
-window.buyBackground = function(bg) {
-  const prices = {
-    Політех: 180,
-    АТБ: 200,
-    Площа: 220,
-    Камінь: 250
-  };
+      const price = prices[bg];
 
-  const price = prices[bg];
+      if (bg === 'default') {
+        currentBackground = 'default';
+        document.body.style.background = backgrounds.default;
+      } else if (price !== undefined && coins >= price) {
+        coins -= price;
+        currentBackground = bg;
+        document.body.style.background = backgrounds[bg];
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundAttachment = "fixed";
+        coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
+        alert("✅ Фон успішно змінено!");
+      } else {
+        alert("Недостатньо Крошників!");
+      }
+      saveProgress();
+    };
 
-  if (bg === 'default') {
-    currentBackground = 'default';
-    document.body.style.background = backgrounds.default;
-  } else if (price !== undefined && coins >= price) {
-    coins -= price;
-    currentBackground = bg;
-    
-    // Повне застосування фону
-    document.body.style.background = backgrounds[bg];
-    document.body.style.backgroundSize = "cover";
-    document.body.style.backgroundPosition = "center";
-    document.body.style.backgroundRepeat = "no-repeat";
-    document.body.style.backgroundAttachment = "fixed";
-
-    coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
-    alert("✅ Фон успішно змінено! (" + bg + ")");
-  } else {
-    alert("Помилка: фон '" + bg + "' не знайдено або недостатньо коштів.");
-  }
-  saveProgress();
-};
     loadProgress();
   </script>
 </body>
