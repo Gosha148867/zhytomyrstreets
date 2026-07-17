@@ -325,22 +325,43 @@
       });
     }
 
-    function showAchievements() {
-      let html = '<h2 style="margin-top:0; color:white;">🏆 Досягнення</h2>';
-      achievements.forEach(ach => {
-        const isUnlocked = unlockedAchievements.has(ach.id);
-        html += `<div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-          <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-          <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
-          <small style="color:#ddd;">${ach.desc}</small>
-          ${isUnlocked ? '<span style="color:#22c55e; float:right;">✓</span>' : ''}
-        </div>`;
-      });
-      const modal = document.createElement('div');
-      modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
-      modal.innerHTML = `<div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">${html}<button onclick="this.closest('div[style*=\"position:fixed\"]').remove()" style="margin-top:20px;padding:12px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;">Закрити</button></div>`;
-      document.body.appendChild(modal);
-    }
+   function showAchievements() {
+  const oldModal = document.getElementById('achievements-modal');
+  if (oldModal) oldModal.remove();
+
+  let html = '<h2 style="margin-top:0; color:white; text-align:center;">🏆 Досягнення</h2>';
+  
+  achievements.forEach(ach => {
+    const isUnlocked = unlockedAchievements.has(ach.id);
+    html += `
+      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+        <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+        <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
+        <small style="color:#ddd;">${ach.desc}</small>
+        ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
+      </div>`;
+  });
+
+  const modal = document.createElement('div');
+  modal.id = "achievements-modal";
+  modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
+
+  modal.innerHTML = `
+    <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
+      ${html}
+      <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
+        Закрити
+      </button>
+    </div>`;
+
+  document.body.appendChild(modal);
+
+  document.getElementById('close-modal-btn').addEventListener('click', () => modal.remove());
+  
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+}
 
     function toggleMusic() {
       if (isMusicPlaying) {
@@ -472,10 +493,10 @@
 
     window.buyBackground = function(bg) {
   const prices = {
-    фон1: 180,
-    фон2: 200,
-    фон3: 220,
-    фон4: 250
+    Політех: 180,
+    АТБ: 200,
+    Площа: 220,
+    Камінь: 250
   };
 
   const price = prices[bg];
@@ -484,18 +505,15 @@
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
     alert("✅ Класичний фон застосовано!");
-  } 
-  else if (price !== undefined && coins >= price) {
+  } else if (price !== undefined && coins >= price) {
     coins -= price;
     currentBackground = bg;
     document.body.style.background = backgrounds[bg];
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
     alert("✅ Фон успішно змінено!");
-  } 
-  else {
+  } else {
     alert("Недостатньо Крошників!");
   }
-  
   saveProgress();
 };
     loadProgress();
