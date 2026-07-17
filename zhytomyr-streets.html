@@ -504,13 +504,17 @@
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
     alert("✅ Класичний фон застосовано!");
-  } 
-  else if (price !== undefined && coins >= price) {
-    coins -= price;
-    currentBackground = bg;
-    document.body.style.background = backgrounds[bg];
-    coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
-    alert("✅ Фон успішно змінено!");
+  } else if (price !== undefined && coins >= price) {
+  coins -= price;
+  currentBackground = bg;
+  
+  document.body.style.background = backgrounds[bg];
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+
+  coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
+  alert("✅ Фон успішно змінено!");
   } 
   else {
     alert("Недостатньо Крошників!");
