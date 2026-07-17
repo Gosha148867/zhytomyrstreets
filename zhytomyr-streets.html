@@ -496,6 +496,14 @@
       if (modal) modal.remove();
     }
 
+const backgrounds = {
+  default: "linear-gradient(135deg, #1e3a8a, #312e81)",
+  Політех: "url('фон1.jpg')",
+  АТБ: "url('фон2.jpg')",
+  Площа: "url('фон3.jpg')",
+  Камінь: "url('фон4.jpg')"
+};
+
 window.buyBackground = function(bg) {
   const prices = {
     Політех: 180,
@@ -509,22 +517,21 @@ window.buyBackground = function(bg) {
   if (bg === 'default') {
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
-    alert("✅ Класичний фон застосовано!");
-  } 
-  else if (price !== undefined && coins >= price) {
+  } else if (price !== undefined && coins >= price) {
     coins -= price;
     currentBackground = bg;
+    
+    // Повне застосування фону
     document.body.style.background = backgrounds[bg];
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
     document.body.style.backgroundAttachment = "fixed";
-    
+
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
-    alert("✅ Фон успішно змінено!");
-  } 
-  else {
-    alert("Недостатньо Крошників! Потрібно: " + (price || "невідомо"));
+    alert("✅ Фон успішно змінено! (" + bg + ")");
+  } else {
+    alert("Помилка: фон '" + bg + "' не знайдено або недостатньо коштів.");
   }
   saveProgress();
 };
