@@ -252,14 +252,13 @@
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
-    const backgrounds = {
+  const backgrounds = {
   default: "linear-gradient(135deg, #1e3a8a, #312e81)",
   Політех: "url('фон1.jpg')",
   АТБ: "url('фон2.jpg')",
   Площа: "url('фон3.jpg')",
   Камінь: "url('фон4.jpg')"
 };
-
     function loadProgress() {
       const savedCoins = localStorage.getItem('zhytomyrCoins');
       const savedBg = localStorage.getItem('zhytomyrBackground');
@@ -462,23 +461,23 @@
       </div>
       
       <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 1</strong> — 180 
-        <button onclick="buyBackground('фон1')" style="float:right;">Купити</button>
+        <strong>Політех</strong> — 180 
+        <button onclick="buyBackground('Політех')" style="float:right;">Купити</button>
       </div>
       
       <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 2</strong> — 200 
-        <button onclick="buyBackground('фон2')" style="float:right;">Купити</button>
+        <strong>АТБ</strong> — 200 
+        <button onclick="buyBackground('АТБ')" style="float:right;">Купити</button>
       </div>
       
       <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 3</strong> — 220 
-        <button onclick="buyBackground('фон3')" style="float:right;">Купити</button>
+        <strong>Площа</strong> — 220 
+        <button onclick="buyBackground('Площа')" style="float:right;">Купити</button>
       </div>
       
       <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-        <strong>Фон 4</strong> — 250 
-        <button onclick="buyBackground('фон4')" style="float:right;">Купити</button>
+        <strong>Камінь</strong> — 250 
+        <button onclick="buyBackground('Камінь')" style="float:right;">Купити</button>
       </div>
 
       <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
@@ -491,7 +490,7 @@
       if (modal) modal.remove();
     }
 
-    window.buyBackground = function(bg) {
+  window.buyBackground = function(bg) {
   const prices = {
     Політех: 180,
     АТБ: 200,
@@ -505,13 +504,15 @@
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
     alert("✅ Класичний фон застосовано!");
-  } else if (price !== undefined && coins >= price) {
+  } 
+  else if (price !== undefined && coins >= price) {
     coins -= price;
     currentBackground = bg;
     document.body.style.background = backgrounds[bg];
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
     alert("✅ Фон успішно змінено!");
-  } else {
+  } 
+  else {
     alert("Недостатньо Крошників!");
   }
   saveProgress();
