@@ -258,7 +258,7 @@
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
 
-  const backgrounds = {
+ const backgrounds = {
   default: "linear-gradient(135deg, #1e3a8a, #312e81)",
   Політех: "url('фон1.jpg')",
   АТБ: "url('фон2.jpg')",
@@ -496,12 +496,12 @@
       if (modal) modal.remove();
     }
 
- window.buyBackground = function(bg) {
+window.buyBackground = function(bg) {
   const prices = {
-    фон1: 180,
-    фон2: 200,
-    фон3: 220,
-    фон4: 250
+    Політех: 180,
+    АТБ: 200,
+    Площа: 220,
+    Камінь: 250
   };
 
   const price = prices[bg];
@@ -509,7 +509,9 @@
   if (bg === 'default') {
     currentBackground = 'default';
     document.body.style.background = backgrounds.default;
-  } else if (price !== undefined && coins >= price) {
+    alert("✅ Класичний фон застосовано!");
+  } 
+  else if (price !== undefined && coins >= price) {
     coins -= price;
     currentBackground = bg;
     document.body.style.background = backgrounds[bg];
@@ -517,10 +519,11 @@
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
     document.body.style.backgroundAttachment = "fixed";
-
+    
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
     alert("✅ Фон успішно змінено!");
-  } else {
+  } 
+  else {
     alert("Недостатньо Крошників! Потрібно: " + (price || "невідомо"));
   }
   saveProgress();
