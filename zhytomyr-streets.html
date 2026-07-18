@@ -20,6 +20,11 @@
       min-height: 100vh;
     }
     h1 { margin: 20px 0 15px; }
+    #mode-selection { margin: 30px 0; }
+    .main-photo {
+      max-width: 750px; width: 100%; height: auto; object-fit: contain;
+      border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); margin: 25px auto; display: block;
+    }
     button {
       padding: 18px 35px;
       font-size: 19px;
@@ -35,11 +40,14 @@
       background: #8b5cf6; color: white; padding: 12px 20px; font-size: 17px; margin: 8px;
     }
     #coins { font-size: 24px; margin: 10px 0; font-weight: bold; }
-    input { padding: 16px; font-size: 22px; width: 70%; max-width: 500px; border: none; border-radius: 12px; margin: 15px 0; }
+    input {
+      padding: 16px; font-size: 22px; width: 70%; max-width: 500px;
+      border: none; border-radius: 12px; margin: 15px 0;
+    }
     #timer { font-size: 48px; font-weight: bold; color: #f87171; margin: 15px 0; }
     .table-container {
-      max-width: 900px; margin: 25px auto; max-height: 500px; overflow-y: auto;
-      border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
+      max-width: 900px; margin: 25px auto; max-height: 500px;
+      overflow-y: auto; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px;
     }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
@@ -232,7 +240,7 @@
       "Шкільний", "Шлях до греблі", "Шляхетна", "Шодуарівський", "Шолом-Алейхема",
       "Шосейний", "Шпаковська", "Шумський", "Яблунева", "Якубця", "Ялинкова",
       "Яроцького", "Ясеневий", "Ясний"
-   ].sort();
+  ].sort();
 
     let coins = 0;
     let currentBackground = "default";
@@ -258,33 +266,34 @@
     const musicBtn = document.getElementById('musicBtn');
 
     const backgrounds = {
-      default: "linear-gradient(135deg, #1e3a8a, #312e81)";
-      Політех: "url('фон1.jpg')";
-      АТБ: "url('фон2.jpg')";
-      Площа: "url('фон3.jpg')";
-      Камінь: "url('фон4.jpg')"
+      default: "linear-gradient(135deg, #1e3a8a, #312e81)",
+      фон1: "url('фон1.jpg')",
+      фон2: "url('фон2.jpg')",
+      фон3: "url('фон3.jpg')",
+      фон4: "url('фон4.jpg')"
     };
-   function loadProgress() {
-      const savedCoins = localStorage.getItem('zhytomyrCoins');
-      const savedBg = localStorage.getItem('zhytomyrBackground');
-      if (savedCoins) coins = parseInt(savedCoins);
-      if (savedBg && backgrounds[savedBg]) currentBackground = savedBg;
-      coinsEl.textContent = coins;
-      document.body.style.background = backgrounds[currentBackground];
-    }
 
-    function saveProgress() {
-      localStorage.setItem('zhytomyrCoins', coins);
-      localStorage.setItem('zhytomyrBackground', currentBackground);
-    }
+  function loadProgress() {
+    const savedCoins = localStorage.getItem('zhytomyrCoins');
+    const savedBg = localStorage.getItem('zhytomyrBackground');
+    if (savedCoins) coins = parseInt(savedCoins);
+    if (savedBg && backgrounds[savedBg]) currentBackground = savedBg;
+    coinsEl.textContent = coins;
+    document.body.style.background = backgrounds[currentBackground];
+  }
 
-    function addCoins(amount) {
-      coins += amount;
-      coinsEl.textContent = coins;
-      saveProgress();
-    }
+  function saveProgress() {
+    localStorage.setItem('zhytomyrCoins', coins);
+    localStorage.setItem('zhytomyrBackground', currentBackground);
+  }
 
-    function initAchievements() {
+  function addCoins(amount) {
+    coins += amount;
+    coinsEl.textContent = coins;
+    saveProgress();
+  }
+
+  function initAchievements() {
       achievements = [
         { id: "beginner", name: "Проїздом через Житомир", desc: "Знайди 10 вулиць", icon: "🌱", target: 10, type: "count" },
         { id: "traveler", name: "Житомирянин", desc: "Знайди 25 вулиць", icon: "🧭", target: 25, type: "count" },
@@ -298,7 +307,7 @@
       ];
     }
 
-    function loadAchievements() {
+function loadAchievements() {
       const saved = localStorage.getItem('zhytomyrAchievements');
       if (saved) unlockedAchievements = new Set(JSON.parse(saved));
     }
@@ -329,43 +338,43 @@
       });
     }
 
-   function showAchievements() {
-  const oldModal = document.getElementById('achievements-modal');
-  if (oldModal) oldModal.remove();
+    function showAchievements() {
+      const oldModal = document.getElementById('achievements-modal');
+      if (oldModal) oldModal.remove();
 
-  let html = '<h2 style="margin-top:0; color:white; text-align:center;">🏆 Досягнення</h2>';
-  
-  achievements.forEach(ach => {
-    const isUnlocked = unlockedAchievements.has(ach.id);
-    html += `
-      <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
-        <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
-        <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
-        <small style="color:#ddd;">${ach.desc}</small>
-        ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
-      </div>`;
-  });
+      let html = '<h2 style="margin-top:0; color:white; text-align:center;">🏆 Досягнення</h2>';
+      
+      achievements.forEach(ach => {
+        const isUnlocked = unlockedAchievements.has(ach.id);
+        html += `
+          <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:10px; text-align:left;">
+            <span style="font-size:32px; filter:${isUnlocked ? 'none' : 'grayscale(1)'};">${ach.icon}</span>
+            <strong style="margin-left:12px; color:white;">${ach.name}</strong><br>
+            <small style="color:#ddd;">${ach.desc}</small>
+            ${isUnlocked ? '<span style="color:#22c55e; float:right; font-size:20px;">✓</span>' : ''}
+          </div>`;
+      });
 
-  const modal = document.createElement('div');
-  modal.id = "achievements-modal";
-  modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
+      const modal = document.createElement('div');
+      modal.id = "achievements-modal";
+      modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:10001; display:flex; align-items:center; justify-content:center;`;
 
-  modal.innerHTML = `
-    <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
-      ${html}
-      <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
-        Закрити
-      </button>
-    </div>`;
+      modal.innerHTML = `
+        <div style="background:#1e3a8a; padding:25px; border-radius:16px; max-width:520px; max-height:90vh; overflow-y:auto; width:90%;">
+          ${html}
+          <button id="close-modal-btn" style="margin-top:20px; padding:14px 40px; font-size:18px; background:#22c55e; color:black; border:none; border-radius:12px; cursor:pointer; width:100%;">
+            Закрити
+          </button>
+        </div>`;
 
-  document.body.appendChild(modal);
+      document.body.appendChild(modal);
 
-  document.getElementById('close-modal-btn').addEventListener('click', () => modal.remove());
-  
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.remove();
-  });
-}
+      document.getElementById('close-modal-btn').addEventListener('click', () => modal.remove());
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+      });
+    }
 
     function toggleMusic() {
       if (isMusicPlaying) {
@@ -450,7 +459,7 @@
       playMusic();
     }
 
-function showShop() {
+    function showShop() {
       const modal = document.createElement('div');
       modal.id = "shop-modal";
       modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
@@ -465,20 +474,20 @@ function showShop() {
             <button onclick="buyBackground('default')" style="float:right;">Застосувати</button>
           </div>
           <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Політех</strong> — 180 
-            <button onclick="buyBackground('Політех')" style="float:right;">Купити</button>
+            <strong>Фон 1</strong> — 180 
+            <button onclick="buyBackground('фон1')" style="float:right;">Купити</button>
           </div>
           <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>АТБ</strong> — 200 
-            <button onclick="buyBackground('АТБ')" style="float:right;">Купити</button>
+            <strong>Фон 2</strong> — 200 
+            <button onclick="buyBackground('фон2')" style="float:right;">Купити</button>
           </div>
           <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Площа</strong> — 220 
-            <button onclick="buyBackground('Площа')" style="float:right;">Купити</button>
+            <strong>Фон 3</strong> — 220 
+            <button onclick="buyBackground('фон3')" style="float:right;">Купити</button>
           </div>
           <div style="margin:12px 0; padding:15px; background:rgba(255,255,255,0.1); border-radius:12px; text-align:left;">
-            <strong>Камінь</strong> — 250 
-            <button onclick="buyBackground('Камінь')" style="float:right;">Купити</button>
+            <strong>Фон 4</strong> — 250 
+            <button onclick="buyBackground('фон4')" style="float:right;">Купити</button>
           </div>
 
           <button onclick="closeShop()" style="margin-top:20px;padding:14px 40px;background:#22c55e;color:black;border:none;border-radius:12px;cursor:pointer;width:100%;">Закрити</button>
@@ -493,10 +502,10 @@ function showShop() {
 
     window.buyBackground = function(bg) {
       const prices = {
-        Політех: 180,
-        АТБ: 200,
-        Площа: 220,
-        Камінь: 250
+        фон1: 180,
+        фон2: 200,
+        фон3: 220,
+        фон4: 250
       };
 
       const price = prices[bg];
