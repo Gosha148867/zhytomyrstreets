@@ -240,10 +240,7 @@
       "Шкільний", "Шлях до греблі", "Шляхетна", "Шодуарівський", "Шолом-Алейхема",
       "Шосейний", "Шпаковська", "Шумський", "Яблунева", "Якубця", "Ялинкова",
       "Яроцького", "Ясеневий", "Ясний"
-  ].sort();
-
-    let coins = 0;
-    let curren].sort();
+ ].sort();
 
     let coins = 0;
     let currentBackground = "default";
@@ -379,6 +376,22 @@ function loadAchievements() {
       });
     }
 
+  function startGame(minutes) {
+      document.getElementById('mode-selection').style.display = 'none';
+      gameDiv.style.display = 'block';
+      input.focus();
+      if (minutes === 0) isUnlimited = true;
+      else timeLeft = minutes * 60;
+      startTime = Date.now();
+      currentCombo = 0;
+      mistakes = 0;
+      initAchievements();
+      loadProgress();
+      startTimer();
+      input.addEventListener('input', checkStreet);
+      playMusic();
+    }
+
     function toggleMusic() {
       if (isMusicPlaying) {
         bgMusic.pause();
@@ -467,7 +480,7 @@ function loadAchievements() {
       modal.id = "shop-modal";
       modal.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:10001;display:flex;align-items:center;justify-content:center;`;
 
-      modal.innerHTML = `
+     modal.innerHTML = `
         <div style="background:#1e3a8a;padding:25px;border-radius:16px;max-width:520px;width:90%;">
           <h2>🛒 Магазин Крошників</h2>
           <p>У тебе: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong> Крошників</p>
@@ -497,8 +510,8 @@ function loadAchievements() {
         </div>`;
       document.body.appendChild(modal);
     }
-
-    function closeShop() {
+	  
+  function closeShop() {
       const modal = document.getElementById('shop-modal');
       if (modal) modal.remove();
     }
