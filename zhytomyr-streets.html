@@ -503,14 +503,14 @@ function loadAchievements() {
       if (modal) modal.remove();
     }
 
- window.buyBackground = function(bg) {
+window.buyBackground = function(bg) {
   let imageUrl = "";
-  let price = 0;
+  let price = 10;  // всі фони по 10 Крошників
 
-  if (bg === "фон1") { imageUrl = "url('фон1.jpg')"; price = 10; }
-  else if (bg === "фон2") { imageUrl = "url('фон2.jpg')"; price = 20; }
-  else if (bg === "фон3") { imageUrl = "url('фон3.jpg')"; price = 20; }
-  else if (bg === "фон4") { imageUrl = "url('фон4.jpg')"; price = 50; }
+  if (bg === "фон1") imageUrl = "url('фон1.jpg')";
+  else if (bg === "фон2") imageUrl = "url('фон2.jpg')";
+  else if (bg === "фон3") imageUrl = "url('фон3.jpg')";
+  else if (bg === "фон4") imageUrl = "url('фон4.jpg')";
   else if (bg === "default") {
     document.body.style.background = "linear-gradient(135deg, #1e3a8a, #312e81)";
     alert("✅ Класичний фон застосовано!");
@@ -518,7 +518,7 @@ function loadAchievements() {
     return;
   }
 
-  if (price > 0 && coins >= price) {
+  if (coins >= price) {
     coins -= price;
 
     document.body.style.background = imageUrl;
@@ -528,7 +528,7 @@ function loadAchievements() {
     document.body.style.backgroundAttachment = "fixed";
 
     coinsEl.innerHTML = `Крошники: <img src="kroshnik.jpg" width="28" height="28" style="vertical-align:middle;"> <strong>${coins}</strong>`;
-    alert("✅ Фон " + bg + " успішно змінено!");
+    alert("✅ Фон " + bg + " успішно змінено! (10 Крошників)");
   } else {
     alert("Недостатньо Крошників!");
   }
