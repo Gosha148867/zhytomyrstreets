@@ -304,7 +304,7 @@
 		{ id: "speedster", name: "Скорострєл", desc: "Знайди 20 вулиць за перші 5 хвилин", icon: "⚡", type: "special" },
         { id: "combo_king", name: "Вінстрік", desc: "10 правильних відповідей поспіль", icon: "🔥", type: "special" },
         { id: "perfect", name: "Перфекціоніст", desc: "Знайди 50 вулиць без жодної помилки", icon: "✨", type: "special" },
-		{ id: "author_master", name: "Пасхалкоо", desc: "Знайди всі авторські вулиці (8)", icon: "🥚", target: 8, type: "author" }
+		{ id: "author_master", name: "Пасхалкоo", desc: "Знайди всі авторські вулиці (8)", icon: "🥚", target: 8, type: "author" }
       ];
     }
 
@@ -326,11 +326,18 @@ function loadAchievements() {
     }
 function checkAchievements() {
   const count = guessed.size;
-
+	
   const authorStreets = [
-    "Гумінського", "Зіньковського", "Героїв політеха", "Героїв оборони атб",
-    "Наталії Венцель", "Хамдоша Іскандера", "Глібко", "Вікторії Нелипович"
+    "Глібко",
+    "Героїв Політеха",
+    "Героїв оборони атб",
+    "Гумінського",
+    "Зіньковського",
+    "Вікторії Нелипович",
+    "Хамдоша Іскандера",
+    "Наталії Венцель"
   ];
+
   const foundAuthor = authorStreets.filter(street => guessed.has(street)).length;
 
   achievements.forEach(ach => {
